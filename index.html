@@ -4,17 +4,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="A simple weather forecast web app built with JavaScript, HTML, and Tailwind CSS. Search by city or use your location to view current weather and a 5-day forecast.">
+    <meta name="description"
+        content="A simple weather forecast web app built with JavaScript, HTML, and Tailwind CSS. Search by city or use your location to view current weather and a 5-day forecast.">
     <meta name="keywords" content="weather app, weather forecast app, Today weather">
     <meta name="author" content="Your Name">
 
     <title>Weather Forecast App</title>
 
     <link href="./output.css" rel="stylesheet">
+    <script src="./script.js" defer></script>
 </head>
 
-<body>
-    <h1 class="text-red-500">hello</h1>
+<body class="bg-gray-900 text-white">
+    <div class="min-h-screen w-full">
+        <header
+            class="w-full flex flex-col sm:flex-row items-center justify-between gap-4 p-4  backdrop-blur-2xl sticky top-0 bg-black/30">
+            <h1 class="min-w-36">Weather Dashboard</h1>
+            <div class="w-full sm:w-auto sm:place-items-end relative">
+                <form id="search-form" class="flex gap-x-3 font-semibold text-white ">
+                    <input type="search" name="city-input" id="cityInput" placeholder="Search for any city..."
+                        class="w-full sm:w-[30vh] lg:w-[40vh] rounded-full border border-gray-600 bg-transparent px-4 py-1 focus:outline-none placeholder-gray-300">
+                    <button type="submit" id=seach-btn
+                        class="bg-blue-500 rounded-md py-1 px-2 text-white hover:bg-blue-600" title="Search cities">
+                        <span class="hidden sm:inline">Search</span>
+                        <span class="inline sm:hidden"><img src="./assets/./icons/search.svg"
+                                alt="Search button"></span>
+                    </button>
+                    <button type="button" id="currentLocation-btn" title="Use my location"
+                        class="bg-red-500 rounded-md py-1 px-2 hover:bg-red-600" title="Use my location">
+                        <span class="hidden sm:inline">Use my location</span>
+                        <span class="inline sm:hidden"><img src="./assets/icons/Location.svg"
+                                alt="Use current location"></span>
+                    </button>
+                </form>
+                <div id="suggestion-box"
+                    class="absolute left-0 mt-2 bg-black/50 h-10 z-20 w-8/10 sm:w-[30vh] lg:w-[40vh] rounded-2xl border border-white/20 shadow-lg overflow-auto hidden">
+                </div>
+            </div>
+        </header>
+    </div>
 </body>
 
 </html>
