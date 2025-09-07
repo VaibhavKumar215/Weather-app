@@ -15,10 +15,11 @@
     <script src="./script.js" defer></script>
 </head>
 
-<body class="bg-gray-900 text-white">
+<body
+    class="bg-gray-900 text-white bg-cover bg-center bg-no-repeat bg-fixed overflow-y-auto transition-all duration-500 ease-in-out">
     <div class="min-h-screen w-full">
         <header
-            class="w-full flex flex-col sm:flex-row items-center justify-between gap-4 p-4  backdrop-blur-2xl sticky top-0 bg-black/30">
+            class="w-full flex flex-col sm:flex-row items-center justify-between gap-4 p-4  backdrop-blur-xl sticky top-0 bg-black/30">
             <h1 class="min-w-36">Weather Dashboard</h1>
             <div class="w-full sm:w-auto sm:place-items-end relative">
                 <form id="search-form" class="flex gap-x-3 font-semibold text-white ">
@@ -42,6 +43,29 @@
                 </div>
             </div>
         </header>
+
+        <main class="w-full max-w-6xl mx-auto grid grid-cols-1 lg:grid-col-3 gap-4 lg-gap-8">
+            <div class="lg:col-span-2 space-y-8">
+                <div
+                    class="flex flex-col md:flex-row items-center p-6 md:p-8 rounded-3xl shadow-2xl text-shadow-[2px_2px_5px_rgb(0,0,0,0.4)] card">
+                    <div class="text-center md:text-left">
+                        <h2 id="cityName" class="text-3xl sm:text-4xl md:text-5xl">City Name</h2>
+                        <p id="CurrentDate" class="text-base sm:text-lg text-gray-300">
+                            Monday, September 07
+                        </p>
+                        <p id="CurrentDegree" class="text-6xl sm:text-7xl md:text-8xl font-bold mt-2 sm:mt-4">
+                            0 ℃
+                        </p>
+                        <p id="CurrentDate" class="text-xl sm:text-2xl mt-2">
+                            Weather
+                        </p>
+                    </div>
+
+                    <img src="" alt="Weather icon" id="currentWeather-icon"
+                        class="w-32 sm:w-48 md:w-64 aspect-square mt-6 md:mt-0">
+                </div>
+            </div>
+        </main>
     </div>
 </body>
 
