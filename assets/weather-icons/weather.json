@@ -1,6 +1,6 @@
 {
     "01d": "./assets/weather-icons/dayTime/clear.svg",
-    "02d": "./assets/weather-icons/dayTime/clouds.svg",
+    "02d": "./assets/weather-icons/dayTime/few-clouds.svg",
     "03d": "./assets/weather-icons/dayTime/scattered-cloud.svg",
     "04d": "./assets/weather-icons/dayTime/broken-clouds.svg",
     "09d": "./assets/weather-icons/dayTime/drizzle.svg",
