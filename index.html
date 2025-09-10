@@ -65,7 +65,8 @@
                     </button>
 
                     <button type="button" id="currentLocation-btn"
-                        class="bg-red-500 rounded-xl py-1 p-3 sm:px-2 hover:bg-red-600 cursor-pointer" title="Use my location">
+                        class="bg-red-500 rounded-xl py-1 p-3 sm:px-2 hover:bg-red-600 cursor-pointer"
+                        title="Use my location">
                         <span class="hidden lg:inline">Use my location</span>
                         <span class="inline lg:hidden"><img src="./assets/icons/Location.svg"
                                 alt="Use current location"></span>
@@ -76,10 +77,10 @@
         </header>
 
         <main class="w-full grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-8 p-4 md:p-8">
-            <div class="lg:col-span-2 space-y-2 flex flex-col-reverse lg:flex-col">
+            <div class="lg:col-span-2 flex flex-col-reverse lg:flex-col gap-y-2">
                 <div
-                    class="flex flex-col md:flex-row justify-center items-center p-6 md:p-8 rounded-3xl shadow-2xl text-shadow-[2px_2px_5px_rgb(0,0,0,0.4)] card">
-                    <div class="text-center md:text-left">
+                    class="relative flex flex-col sm:flex-row justify-center items-center  p-6 md:p-8 rounded-3xl shadow-2xl text-shadow-[2px_2px_5px_rgb(0,0,0,0.4)] card">
+                    <div class="text-center sm:text-left mt-5 sm:mt-0">
                         <h2 id="cityName" class="text-3xl sm:text-4xl md:text-5xl">City Name</h2>
                         <p id="currentDate" class="text-base sm:text-lg text-gray-300">
                             Monday, September 07
@@ -92,11 +93,21 @@
                         </p>
                     </div>
 
-                    <img src="" alt="Weather icon" id="currentWeather-icon"
-                        class="w-32 sm:w-48 md:w-64 aspect-square mt-6 md:mt-0">
+                    <img src="" alt="Weather icon" id="currentWeather-icon" class="w-32 sm:w-48 md:w-64 aspect-square">
+
+                    <div id="toggleDegreeBtn" class="absolute top-2 right-2">
+                        <div class="flex items-center rounded-full p-0.5 w-18 sm:w-24 bg-white/20">
+                            <button id="celsius-btn" class="toggle-btn active">
+                                °C
+                            </button>
+                            <button id="fahrenheit-btn" class="toggle-btn">
+                                °F
+                            </button>
+                        </div>
+                    </div>
                 </div>
 
-                <div id="warningSection" class="mb-2 px-2 py-1.5 rounded-xl pl-6">
+                <div id="warningSection" class=" px-2 py-1.5 rounded-xl pl-6">
                     <div class="flex items-center gap-x-4 mb-3">
                         <div>
                             <p id="warning-level" class="py-0.5 px-3 rounded-xl font-bold text-xs">??</p>
@@ -169,7 +180,7 @@
                                 <img src="./assets/icons/air-quality.svg" alt="Air quality icon" class="w-6 h-6">
                                 <p class="text-slate-200">Air Quality</p>
                             </div>
-                            <span id="airQuality" class="font-semibold px-3 py-1 rounded-full text-sm">--km</span>
+                            <span id="airQuality">--km</span>
                         </div>
                     </div>
                 </div>
@@ -181,7 +192,18 @@
                 <h3 class="text-3xl font-bold mb-4 text-shadow">
                     Next 5-Days Forecast
                 </h3>
-                <div id="forecast-container" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-8 lg:gap-4">
+                <div id="forecast-container"
+                    class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-8 lg:gap-4">
+                </div>
+            </div>
+        </section>
+
+        <section id="recentlySearchedContainer" class="w-full p-4 md:p-8 mt-2">
+            <div>
+                <h3 class="text-3xl font-bold mb-4 text-shadow">
+                    Recently Seached Cities
+                </h3>
+                <div id="searchedCity-container" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-8 lg:gap-4">
                 </div>
             </div>
         </section>

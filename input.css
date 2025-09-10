@@ -23,3 +23,10 @@ body{
     @apply backdrop-blur-sm bg-black/40
 }
 
+.toggle-btn{
+    @apply flex-1 px-2 sm:px-3 py-0.5 sm:py-1 text-sm sm:text-base font-semibold rounded-full text-white
+}
+
+.toggle-btn.active{
+    @apply bg-blue-500
+}
