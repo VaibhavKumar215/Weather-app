@@ -171,6 +171,8 @@ toggleDegreeBtn.addEventListener('click', (e) => {
     fahrenheitBtn.classList.toggle("active", unit === "imperial");
 
     fetchWeather({ city: cityName.textContent.split(',')[0].trim() })
+    renderRecentSearches();
+
 })
 
 
@@ -278,14 +280,14 @@ function Weatherwarning(id) {
     warningSection.className = "flex justify-center items-center rounded-b-3xl p-5 h-14 text-base font-bold"
 
     if (data.level === 'high') {
-        warningSection.classList.add("bg-gradient-to-r", "from-red-600/60", "to-red-800/40", "border", "border-red-400", "animate-pulse");
+        warningSection.classList.add("bg-gradient-to-r", "from-red-300/60", "to-red-500/40", "border", "border-red-400", "animate-pulse");
     }
     else if (data.level === "medium") {
-        warningSection.classList.add("bg-gradient-to-r", "from-yellow-400/60", "to-yellow-600/40", "border", "border-yellow-300");
+        warningSection.classList.add("bg-gradient-to-r", "from-yellow-300/60", "to-yellow-500/40", "border", "border-yellow-300");
 
     }
     else {
-        warningSection.classList.add("bg-gradient-to-r", "from-green-500/60", "to-green-700/40", "border", "border-green-300");
+        warningSection.classList.add("bg-gradient-to-r", "from-green-300/60", "to-green-500/40", "border", "border-green-300");
     }
 
     warningDescription.textContent = data.warning;
