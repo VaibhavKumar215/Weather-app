@@ -18,7 +18,7 @@
 <body
     class="bg-gray-900 text-white bg-cover bg-center bg-no-repeat bg-fixed overflow-y-auto transition-all duration-500 ease-in-out">
 
-    <div class="min-h-screen w-full max-w-7xl m-auto">
+    <div class="min-h-screen w-full max-w-7xl m-auto cursor-default">
 
         <div id="loading-overlay"
             class="fixed inset-0 bg-gray-900 opacity-80 flex-col gap-y-3 items-center justify-center z-50 hidden ">
@@ -76,9 +76,10 @@
             </div>
         </header>
 
-        <main class="w-full grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-8 p-4 md:p-8">
-            <div class="lg:col-span-2  rounded-3xl shadow-2xl text-shadow-[2px_2px_5px_rgb(0,0,0,0.4)] card">
-                <div class="relative flex flex-col sm:flex-row justify-center items-center  p-6 md:p-9  ">
+        <main class="w-full grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-8 p-4 md:p-8 items-center">
+            <div class="lg:col-span-2 card rounded-3xl">
+                <div
+                    class="relative flex flex-col sm:flex-row justify-center items-center  p-6 md:p-8 shadow-2xl text-shadow-[2px_2px_5px_rgb(0,0,0,0.4)]">
                     <div class="text-center sm:text-left mt-5 sm:mt-0">
                         <h2 id="cityName" class="text-3xl sm:text-4xl md:text-5xl">City Name</h2>
                         <p id="currentDate" class="text-base sm:text-lg text-gray-300">
@@ -106,81 +107,72 @@
                     </div>
                 </div>
 
-                <div id="warningSection" class=" px-2 py-1.5 rounded-b-3xl pl-6">
-                    <div class="flex items-center gap-x-4 mb-3">
-                        <div>
-                            <p id="warning-level" class="py-0.5 px-3 rounded-xl font-bold text-xs">??</p>
-                        </div>
-                        <h3 class=" text-lg lg:text-xl font-bold text-gray-200">Weather Condition</h3>
-
-
-                    </div>
-                    <p id="warning-description" class="text-base">Loading warning description ...</p>
+                <div id="warningSection" class=>
+                    <p id="warning-description">Loading warning description ...</p>
                 </div>
             </div>
 
-            <div class="flex flex-col">
-                <div class="p-6 rounded-2xl backdrop-blur-xl flex flex-col space-y-5 card ">
 
-                    <div class="grid grid-cols-2 gap-6 text-center border-b border-white/20 pb-5">
-                        <div>
-                            <p class="text-gray-300 text-sm">Sunrise</p>
-                            <p id="sunriseTime" class="font-bold text-xl sm:text-2xl">-----/---</p>
-                        </div>
-                        <div>
-                            <p class="text-gray-300 text-sm">Sunset</p>
-                            <p id="sunsetTime" class="font-bold text-xl sm:text-2xl">-----/---</p>
-                        </div>
+            <div class="p-6 rounded-2xl backdrop-blur-xl flex flex-col gap-y-5 card ">
+                <div class="grid grid-cols-2 gap-6 text-center border-b border-white/20 pb-5">
+                    <div>
+                        <p class="text-gray-300 text-sm">Sunrise</p>
+                        <p id="sunriseTime" class="font-bold text-xl sm:text-2xl">-----/---</p>
                     </div>
-                    <div class="sm:flex sm:gap-x-5 lg:block lg:gap-0 pt-4 space-y-4 text-base lg:text-lg">
-                        <!-- Weather Details -->
-                        <div class="flex flex-1 sm:flex-col lg:flex-row items-center justify-between ">
-                            <div class="flex sm:flex-col lg:flex-row items-center gap-2">
-                                <img src="./assets/icons/humidity.svg" alt="Humidity icon" class="w-6 h-6">
-                                <p class="text-slate-200">Humidity</p>
-                            </div>
-                            <span id="humidity">--%</span>
-                        </div>
+                    <div>
+                        <p class="text-gray-300 text-sm">Sunset</p>
+                        <p id="sunsetTime" class="font-bold text-xl sm:text-2xl">-----/---</p>
+                    </div>
+                </div>
 
-                        <div class="flex flex-1 sm:flex-col lg:flex-row items-center justify-between">
-                            <div class="flex sm:flex-col lg:flex-row items-center gap-2">
-                                <img src="./assets/icons/wind.svg" alt="Wind speed icon" class="w-6 h-6">
-                                <p class="text-slate-200">Wind</p>
-                            </div>
-                            <span id="windSpeed">--km/h</span>
+                <div class="grid grid-1 sm:grid-cols-6 lg:grid-cols-1 gap-y-4 text-base lg:text-lg">
+                    <!-- Weather Details -->
+                    <div class="flex sm:flex-col lg:flex-row gap-y-1 items-center justify-between">
+                        <div class="flex sm:flex-col lg:flex-row items-center gap-2">
+                            <img src="./assets/icons/humidity.svg" alt="Humidity icon" class="w-6 h-6">
+                            <p class="text-slate-200">Humidity</p>
                         </div>
+                        <span id="humidity" class="text-blue-400">--%</span>
+                    </div>
 
-                        <div class="flex flex-1 sm:flex-col lg:flex-row items-center justify-between">
-                            <div class="flex sm:flex-col lg:flex-row items-center gap-2">
-                                <img src="./assets/icons/feels-like.svg" alt="Feels like icon" class="w-6 h-6">
-                                <p class="text-slate-200">Feels Like</p>
-                            </div>
-                            <span id="feelsLike">--℃</span>
+                    <div class="flex sm:flex-col lg:flex-row gap-y-1 items-center justify-between">
+                        <div class="flex sm:flex-col lg:flex-row items-center gap-2">
+                            <img src="./assets/icons/wind.svg" alt="Wind speed icon" class="w-6 h-6">
+                            <p class="text-slate-200">Wind</p>
                         </div>
+                        <span id="windSpeed">--km/h</span>
+                    </div>
 
-                        <div class="flex flex-1 sm:flex-col lg:flex-row items-center justify-between">
-                            <div class="flex sm:flex-col lg:flex-row items-center gap-2">
-                                <img src="./assets/icons/pressure.svg" alt="Pressure icon" class="w-6 h-6">
-                                <p class="text-slate-200">Pressure</p>
-                            </div>
-                            <span id="pressure">--hPa</span>
+                    <div class="flex sm:flex-col lg:flex-row gap-y-1 items-center justify-between">
+                        <div class="flex sm:flex-col lg:flex-row items-center gap-2">
+                            <img src="./assets/icons/feels-like.svg" alt="Feels like icon" class="w-6 h-6">
+                            <p class="text-slate-200">Feels Like</p>
                         </div>
+                        <span id="feelsLike" class="text-yellow-400">--℃</span>
+                    </div>
 
-                        <div class="flex flex-1 sm:flex-col lg:flex-row items-center justify-between">
-                            <div class="flex sm:flex-col lg:flex-row items-center gap-2">
-                                <img src="./assets/icons/visibility.svg" alt="Visibility icon" class="w-6 h-6">
-                                <p class="text-slate-200">Visibility</p>
-                            </div>
-                            <span id="visibility">--km</span>
+                    <div class="flex sm:flex-col lg:flex-row gap-y-1 items-center justify-between">
+                        <div class="flex sm:flex-col lg:flex-row items-center gap-2">
+                            <img src="./assets/icons/pressure.svg" alt="Pressure icon" class="w-6 h-6">
+                            <p class="text-slate-200">Pressure</p>
                         </div>
+                        <span id="pressure" class="text-red-400">--hPa</span>
+                    </div>
 
-                        <div class="flex flex-1 sm:flex-col lg:flex-row items-center justify-between">
-                            <div class="flex sm:flex-col lg:flex-row items-center gap-2">
-                                <img src="./assets/icons/air-quality.svg" alt="Air quality icon" class="w-6 h-6">
-                                <p class="text-slate-200">Air Quality</p>
-                            </div>
-                            <span id="airQuality">--km</span>
+                    <div class="flex sm:flex-col lg:flex-row gap-y-1 items-center justify-between">
+                        <div class="flex sm:flex-col lg:flex-row items-center gap-2">
+                            <img src="./assets/icons/visibility.svg" alt="Visibility icon" class="w-6 h-6">
+                            <p class="text-slate-200">Visibility</p>
                         </div>
+                        <span id="visibility" class="text-green-400">--km</span>
+                    </div>
+
+                    <div class="flex sm:flex-col lg:flex-row gap-y-1 items-center justify-between">
+                        <div class="flex sm:flex-col lg:flex-row items-center gap-2">
+                            <img src="./assets/icons/air-quality.svg" alt="Air quality icon" class="w-6 h-6">
+                            <p class="text-slate-200">Air Quality</p>
+                        </div>
+                        <span id="airQuality">--</span>
                     </div>
                 </div>
             </div>
@@ -196,13 +188,13 @@
             </div>
         </section>
 
-        <section id="recentlySearchedContainer" class="w-full p-4 md:p-8 mt-5">
+        <section id="recentlySearchedContainer" class="w-full p-4 md:p-8 mt-5 cursor-pointer">
             <div>
                 <h3 class="text-3xl font-bold mb-4 text-shadow">
                     Recently Seached Cities
                 </h3>
                 <div id="searchedCity-container"
-                    class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                    class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-5">
                 </div>
             </div>
         </section>

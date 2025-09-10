@@ -164,18 +164,13 @@ toggleDegreeBtn.addEventListener('click', (e) => {
     const fahrenheitBtn = document.getElementById("fahrenheit-btn")
     const celsiusBtn = document.getElementById("celsius-btn")
 
-    if (unit === "metric") {
-        unit = "imperial"
-        celsiusBtn.classList.remove('active');
-        fahrenheitBtn.classList.add('active');
-        fetchWeather({ city: cityName.textContent.split(',')[0] })
-    }
-    else {
-        unit = "metric"
-        fahrenheitBtn.classList.remove('active');
-        celsiusBtn.classList.add('active');
-        fetchWeather({ city: cityName.textContent.split(',')[0] })
-    }
+     unit = (unit === "metric") ? "imperial" : "metric";
+
+    // Toggle button classes
+    celsiusBtn.classList.toggle("active", unit === "metric");
+    fahrenheitBtn.classList.toggle("active", unit === "imperial");
+
+    fetchWeather({ city: cityName.textContent.split(',')[0].trim() })
 })
 
 
@@ -238,16 +233,8 @@ async function fetchWeather({ lat, lon, city, search = false }) {
 }
 
 function updateUI(weather, forecast, aqi) {
-    // let weatherConditionForBg = weather.weather[0].main;
     let weatherIcon = weather.weather[0].icon;
-    // const currentTimeUTC = weather.dt;
-    // const sunriseUTC = weather.sys.sunrise;
-    // const sunsetUTC = weather.sys.sunset;
-    // const isNight = (currentTimeUTC < sunriseUTC || currentTimeUTC > sunsetUTC);
 
-    // const backgroundImageSet = isNight ? "backgroundImageNight" : "backgroundImageDay";
-
-    // setBackground(weatherIcon);
     currentWeatherIcon.src = `${setWeatherIcons(weatherIcon)}`;
 
     cityName.textContent = `${weather.name}, ${weather.sys.country}`
@@ -281,7 +268,6 @@ function updateUI(weather, forecast, aqi) {
 
 function Weatherwarning(id) {
     const warningSection = document.getElementById('warningSection')
-    const warnigLevel = document.getElementById('warning-level')
     const warningDescription = document.getElementById('warning-description')
     const warningData = weatherWarningsData[id];
     if (!warningData) {
@@ -289,21 +275,16 @@ function Weatherwarning(id) {
         return;
     } 
     const data = warningData.warningLevel;
+    warningSection.className = "flex justify-center items-center rounded-b-3xl p-5 h-14 text-base font-bold"
 
     if (data.level === 'high') {
-        warnigLevel.textContent = "High";
-        warnigLevel.classList.add('bg-red-500');
-        warningSection.classList.add("bg-gradient-to-r", "from-red-600/60", "to-red-800/50", "border", "border-red-400", "animate-pulse");
+        warningSection.classList.add("bg-gradient-to-r", "from-red-600/60", "to-red-800/40", "border", "border-red-400", "animate-pulse");
     }
     else if (data.level === "medium") {
-        warnigLevel.textContent = "Medium";
-        warnigLevel.classList.add('bg-yellow-500')
         warningSection.classList.add("bg-gradient-to-r", "from-yellow-400/60", "to-yellow-600/40", "border", "border-yellow-300");
 
     }
     else {
-        warnigLevel.textContent = "Low";
-        warnigLevel.classList.add('bg-green-500')
         warningSection.classList.add("bg-gradient-to-r", "from-green-500/60", "to-green-700/40", "border", "border-green-300");
     }
 
@@ -496,6 +477,7 @@ async function renderRecentSearches() {
     }
 
     recentlySearchedContainer.classList.remove("hidden");
+    console.log(recentSearches)
 
     for (const cityName of recentSearches) {
         try {
@@ -504,9 +486,6 @@ async function renderRecentSearches() {
             if (day) {
                 const card = document.createElement("div");
                 card.className = `p-4 rounded-2xl text-center backdrop-blur-xl card`;
-
-                // const localDate = new Date((day.dt + day.timezone) * 1000).toLocaleDateString("en-US", { weekday: "short" });
-                // <p class="font-bold text-lg">${localDate}</p>
                 card.innerHTML = `
                     <p class="font-bold text-lg">${day.name}</p>
                     
@@ -516,6 +495,11 @@ async function renderRecentSearches() {
                     <p>${Math.round(day.main.temp_max)}° / ${Math.round(day.main.temp_min)}°</p>
                     <p class="font-semibold">${day.weather[0].description}</p> 
                 `;
+                 card.onclick = () => {
+                    fetchWeather({ city: cityName });
+                    addRecentSearch(cityName);
+                    window.scrollTo({ top: 0, behavior: "smooth" });
+                };
 
                 searchedCityContainer.appendChild(card);
             }
