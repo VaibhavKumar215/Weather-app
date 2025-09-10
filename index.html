@@ -77,9 +77,8 @@
         </header>
 
         <main class="w-full grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-8 p-4 md:p-8">
-            <div class="lg:col-span-2 flex flex-col-reverse lg:flex-col gap-y-2">
-                <div
-                    class="relative flex flex-col sm:flex-row justify-center items-center  p-6 md:p-8 rounded-3xl shadow-2xl text-shadow-[2px_2px_5px_rgb(0,0,0,0.4)] card">
+            <div class="lg:col-span-2  rounded-3xl shadow-2xl text-shadow-[2px_2px_5px_rgb(0,0,0,0.4)] card">
+                <div class="relative flex flex-col sm:flex-row justify-center items-center  p-6 md:p-9  ">
                     <div class="text-center sm:text-left mt-5 sm:mt-0">
                         <h2 id="cityName" class="text-3xl sm:text-4xl md:text-5xl">City Name</h2>
                         <p id="currentDate" class="text-base sm:text-lg text-gray-300">
@@ -95,7 +94,7 @@
 
                     <img src="" alt="Weather icon" id="currentWeather-icon" class="w-32 sm:w-48 md:w-64 aspect-square">
 
-                    <div id="toggleDegreeBtn" class="absolute top-2 right-2">
+                    <div id="toggleDegreeBtn" class="absolute top-3 right-3">
                         <div class="flex items-center rounded-full p-0.5 w-18 sm:w-24 bg-white/20">
                             <button id="celsius-btn" class="toggle-btn active">
                                 °C
@@ -107,7 +106,7 @@
                     </div>
                 </div>
 
-                <div id="warningSection" class=" px-2 py-1.5 rounded-xl pl-6">
+                <div id="warningSection" class=" px-2 py-1.5 rounded-b-3xl pl-6">
                     <div class="flex items-center gap-x-4 mb-3">
                         <div>
                             <p id="warning-level" class="py-0.5 px-3 rounded-xl font-bold text-xs">??</p>
@@ -133,50 +132,50 @@
                             <p id="sunsetTime" class="font-bold text-xl sm:text-2xl">-----/---</p>
                         </div>
                     </div>
-                    <div class="pt-4 space-y-4 text-base lg:text-lg">
+                    <div class="sm:flex sm:gap-x-5 lg:block lg:gap-0 pt-4 space-y-4 text-base lg:text-lg">
                         <!-- Weather Details -->
-                        <div class="flex items-center justify-between ">
-                            <div class="flex items-center gap-2">
+                        <div class="flex flex-1 sm:flex-col lg:flex-row items-center justify-between ">
+                            <div class="flex sm:flex-col lg:flex-row items-center gap-2">
                                 <img src="./assets/icons/humidity.svg" alt="Humidity icon" class="w-6 h-6">
                                 <p class="text-slate-200">Humidity</p>
                             </div>
                             <span id="humidity">--%</span>
                         </div>
 
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center gap-2">
+                        <div class="flex flex-1 sm:flex-col lg:flex-row items-center justify-between">
+                            <div class="flex sm:flex-col lg:flex-row items-center gap-2">
                                 <img src="./assets/icons/wind.svg" alt="Wind speed icon" class="w-6 h-6">
                                 <p class="text-slate-200">Wind</p>
                             </div>
                             <span id="windSpeed">--km/h</span>
                         </div>
 
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center gap-2">
+                        <div class="flex flex-1 sm:flex-col lg:flex-row items-center justify-between">
+                            <div class="flex sm:flex-col lg:flex-row items-center gap-2">
                                 <img src="./assets/icons/feels-like.svg" alt="Feels like icon" class="w-6 h-6">
                                 <p class="text-slate-200">Feels Like</p>
                             </div>
                             <span id="feelsLike">--℃</span>
                         </div>
 
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center gap-2">
+                        <div class="flex flex-1 sm:flex-col lg:flex-row items-center justify-between">
+                            <div class="flex sm:flex-col lg:flex-row items-center gap-2">
                                 <img src="./assets/icons/pressure.svg" alt="Pressure icon" class="w-6 h-6">
                                 <p class="text-slate-200">Pressure</p>
                             </div>
                             <span id="pressure">--hPa</span>
                         </div>
 
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center gap-2">
+                        <div class="flex flex-1 sm:flex-col lg:flex-row items-center justify-between">
+                            <div class="flex sm:flex-col lg:flex-row items-center gap-2">
                                 <img src="./assets/icons/visibility.svg" alt="Visibility icon" class="w-6 h-6">
                                 <p class="text-slate-200">Visibility</p>
                             </div>
                             <span id="visibility">--km</span>
                         </div>
 
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center gap-2">
+                        <div class="flex flex-1 sm:flex-col lg:flex-row items-center justify-between">
+                            <div class="flex sm:flex-col lg:flex-row items-center gap-2">
                                 <img src="./assets/icons/air-quality.svg" alt="Air quality icon" class="w-6 h-6">
                                 <p class="text-slate-200">Air Quality</p>
                             </div>
@@ -187,23 +186,23 @@
             </div>
         </main>
 
-        <section class="w-full p-4 md:p-8 mt-2">
+        <section class="w-full p-4 md:p-8 mt-5">
             <div>
                 <h3 class="text-3xl font-bold mb-4 text-shadow">
                     Next 5-Days Forecast
                 </h3>
-                <div id="forecast-container"
-                    class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-8 lg:gap-4">
+                <div id="forecast-container" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6 lg:gap-4">
                 </div>
             </div>
         </section>
 
-        <section id="recentlySearchedContainer" class="w-full p-4 md:p-8 mt-2">
+        <section id="recentlySearchedContainer" class="w-full p-4 md:p-8 mt-5">
             <div>
                 <h3 class="text-3xl font-bold mb-4 text-shadow">
                     Recently Seached Cities
                 </h3>
-                <div id="searchedCity-container" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-8 lg:gap-4">
+                <div id="searchedCity-container"
+                    class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
                 </div>
             </div>
         </section>

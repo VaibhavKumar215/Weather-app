@@ -1,6 +1,6 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
 @import "tailwindcss";
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
 
 *{
     box-sizing: border-box;
@@ -24,7 +24,7 @@ body{
 }
 
 .toggle-btn{
-    @apply flex-1 px-2 sm:px-3 py-0.5 sm:py-1 text-sm sm:text-base font-semibold rounded-full text-white
+    @apply flex-1 px-2 sm:px-3 py-1 text-sm sm:text-base font-semibold rounded-full text-white
 }
 
 .toggle-btn.active{

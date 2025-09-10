@@ -322,7 +322,7 @@ function fiveDaysWeather(dailyForecasts) {
             
             <p>${Math.round(day.main.temp_max)}°/ ${Math.round(day.main.temp_min)}</p>
             <p class="font-semibold">${day.weather[0].description}</p>
-            <div class="p-2 sm:p-4 mt-1 rounded-2xl backdrop-blur-xl flex flex-col">
+            <div class="p-2 sm:p-4 mt-1 rounded-2xl backdrop-blur-xl">
                 <div class="space-y-2 text-xs lg:text-sm">
                     <!-- Weather Details -->
                     <div class="flex items-center justify-between ">
@@ -500,15 +500,16 @@ async function renderRecentSearches() {
     for (const cityName of recentSearches) {
         try {
             const day = await fetchWeather({ city: cityName, search: true });
-
+            
             if (day) {
                 const card = document.createElement("div");
                 card.className = `p-4 rounded-2xl text-center backdrop-blur-xl card`;
 
-                const localDate = new Date((day.dt + day.timezone) * 1000).toLocaleDateString("en-US", { weekday: "short" });
-
+                // const localDate = new Date((day.dt + day.timezone) * 1000).toLocaleDateString("en-US", { weekday: "short" });
+                // <p class="font-bold text-lg">${localDate}</p>
                 card.innerHTML = `
-                    <p class="font-bold text-lg">${localDate}</p>
+                    <p class="font-bold text-lg">${day.name}</p>
+                    
                     <img src="${setWeatherIcons(day.weather[0].icon)}" 
                          alt="${day.weather[0].description} icon" 
                          class="font-semibold mx-auto w-16 aspect-square">
