@@ -4,30 +4,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description"
-        content="A simple weather forecast web app built with JavaScript, HTML, and Tailwind CSS. Search by city or use your location to view current weather and a 5-day forecast.">
+    <meta name="description" content="A simple weather forecast web app built with JavaScript, HTML, and Tailwind CSS. Search by city or use your location to view current weather and a 5-day forecast.">
     <meta name="keywords" content="weather app, weather forecast app, Today weather">
     <meta name="author" content="Your Name">
 
-    <title>Weather Forecast App</title>
+    <title>Weather Forecast App with Real-time Weather & 5-Day Forecast</title>
 
     <link href="./output.css" rel="stylesheet">
     <script src="./script.js" defer></script>
+
 </head>
 
 <body class="bg-black/20 text-white bg-cover bg-center bg-fixed bg-blend-darken bg-no-repeat overflow-y-auto transition-all duration-500 ease-in-out">
 
-    <div class="min-h-screen max-w-[120rem] m-auto cursor-default">
+    <!-- Main container -->
+    <div class="min-h-screen max-w-[120rem] m-auto">
 
+        <!-- Loading Overlay (spinner shown when fetching data) -->
         <div id="loading-overlay"
             class="fixed inset-0 bg-gray-900 opacity-80 flex-col gap-y-3 items-center justify-center z-50 hidden ">
             <div
                 class="w-12 h-12 border-8 border-blue-500 border-dotted rounded-full animate-spin [animation-duration:3s] ">
             </div>
             <p class="text-xl">Fetching Your Weather</p>
-
         </div>
 
+        <!-- Error Modal (shown when API fetch fails) -->
         <dialog id="error-modal" class="border m-auto rounded-xl transform duration-300 ease-out scale-0">
             <div class="bg-red-600 border border-red-400 rounded-lg shadow-xl p-6 text-center text-white">
                 <h3 class="text-2xl font-bold mb-4">Oops! Something went wrong</h3>
@@ -39,23 +41,26 @@
             </div>
         </dialog>
 
-        <header
-            class="flex flex-col md:flex-row items-center justify-between gap-4 p-6 backdrop-blur-lg sticky top-0 bg-black/30 z-20">
+        <!-- Header / Navigation -->
+        <header class="flex flex-col md:flex-row items-center justify-between gap-4 p-6 backdrop-blur-lg sticky top-0 bg-black/30 z-20">
             <h1 class="flex-shrink-0 text-2xl font-bold">🌤️ Weather App</h1>
 
+            <!-- Search Form -->
             <div class="w-full md:w-auto md:place-items-end">
                 <form id="search-form" class="flex gap-x-3 font-semibold text-white w-full">
 
+                    <!-- City Search Input -->
                     <div class="relative w-full md:w-[40vw] lg:max-w-[510px]">
                         <input type="search" name="city-input" id="city-input" placeholder="Search for any city..."
                             class="w-full rounded-full border border-gray-600 bg-white/30 px-5 py-2.5 focus:outline-none placeholder-gray-300">
 
-                        <!-- Suggestion box aligned with input -->
+                        <!-- Suggestion Dropdown -->
                         <div id="suggestion-box"
                             class="absolute left-0 mt-2 w-full bg-black/70 backdrop-blur-md rounded-md border border-white/20 shadow-lg hidden z-20">
                         </div>
                     </div>
 
+                    <!-- Search Button -->
                     <button type="submit" id="search-btn"
                         class="bg-blue-500 rounded-xl py-1 px-3 lg:px-2 text-white hover:bg-blue-600 cursor-pointer"
                         title="Search cities">
@@ -63,6 +68,7 @@
                         <span class="inline lg:hidden"><img src="./assets/icons/search.svg" alt="Search button"></span>
                     </button>
 
+                    <!-- Current Location Button -->
                     <button type="button" id="currentLocation-btn"
                         class="bg-red-500 rounded-xl py-1 px-3 lg:px-2 hover:bg-red-600 cursor-pointer"
                         title="Use my location">
@@ -70,16 +76,20 @@
                         <span class="inline lg:hidden"><img src="./assets/icons/Location.svg"
                                 alt="Use current location"></span>
                     </button>
-
                 </form>
             </div>
         </header>
 
+        <!-- Main Weather Section -->
         <section class="lg:px-20 ">
             <main class="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-8 p-4 md:p-8 items-center">
+
+                <!-- Current Weather Card -->
                 <div class="lg:col-span-2 backdrop-blur-xs rounded-3xl card ">
                     <div
-                        class="relative flex flex-col sm:flex-row justify-center items-center  p-6 md:p-8 shadow-2xl text-shadow-[4px_4px_6px_rgb(0,0,0,0.5)]">
+                        class="relative flex flex-col sm:flex-row justify-center items-center  p-4 md:p-8 shadow-2xl text-shadow-[4px_4px_6px_rgb(0,0,0,0.5)]">
+
+                        <!-- City + Temperature Info -->
                         <div class="text-center sm:text-left mt-5 sm:mt-0">
                             <h2 id="cityName" class="text-3xl sm:text-4xl md:text-5xl">City Name</h2>
                             <p id="currentDate" class="text-base sm:text-lg text-gray-300">
@@ -93,26 +103,27 @@
                             </p>
                         </div>
 
+                        <!-- Weather Icon -->
                         <img src="" alt="Weather icon" id="currentWeather-icon"
                             class="w-32 sm:w-48 md:w-64 aspect-square">
 
+                        <!-- Temperature Unit Toggle -->
                         <div id="toggleDegreeBtn" class="absolute top-3 right-3 flex rounded-full p-1 w-18 sm:w-24 bg-white/20">
-                            <button id="celsius-btn" class="toggle-btn active">
-                                °C
-                            </button>
-                            <button id="fahrenheit-btn" class="toggle-btn">
-                                °F
-                            </button>
+                            <button id="celsius-btn" class="toggle-btn active">°C</button>
+                            <button id="fahrenheit-btn" class="toggle-btn">°F</button>
                         </div>
                     </div>
 
+                    <!-- Warning Section (for extreme weather alerts) -->
                     <div id="warningSection">
                         <p id="warning-description">Loading warning description ...</p>
                     </div>
                 </div>
 
-
+                <!-- Weather Details (side card) -->
                 <div class="p-6 rounded-2xl backdrop-blur-lg flex flex-col gap-y-5 card ">
+
+                    <!-- Sunrise & Sunset -->
                     <div class="grid grid-cols-2 gap-6 text-center border-b border-white/20 pb-5">
                         <div>
                             <p class="text-gray-300 text-sm">Sunrise</p>
@@ -124,8 +135,10 @@
                         </div>
                     </div>
 
+                    <!-- Other Weather Details -->
                     <div class="grid grid-1 sm:grid-cols-6 lg:grid-cols-1 gap-y-4 text-base lg:text-lg">
-                        <!-- Weather Details -->
+
+                        <!-- Humidity -->
                         <div class="flex flex-row sm:flex-col lg:flex-row gap-y-1 items-center justify-between">
                             <div class="flex sm:flex-col lg:flex-row items-center gap-2">
                                 <img src="./assets/icons/humidity.svg" alt="Humidity icon" class="w-6 h-6">
@@ -134,6 +147,7 @@
                             <span id="humidity">--%</span>
                         </div>
 
+                        <!-- Wind -->
                         <div class="flex flex-row sm:flex-col lg:flex-row gap-y-1 items-center justify-between">
                             <div class="flex sm:flex-col lg:flex-row items-center gap-2">
                                 <img src="./assets/icons/wind.svg" alt="Wind speed icon" class="w-6 h-6">
@@ -142,6 +156,7 @@
                             <span id="windSpeed">--km/h</span>
                         </div>
 
+                        <!-- Feels Like -->
                         <div class="flex flex-row sm:flex-col lg:flex-row gap-y-1 items-center justify-between">
                             <div class="flex sm:flex-col lg:flex-row items-center gap-2">
                                 <img src="./assets/icons/feels-like.svg" alt="Feels like icon" class="w-6 h-6">
@@ -150,6 +165,7 @@
                             <span id="feelsLike">--℃</span>
                         </div>
 
+                        <!-- Pressure -->
                         <div class="flex flex-row sm:flex-col lg:flex-row gap-y-1 items-center justify-between">
                             <div class="flex sm:flex-col lg:flex-row items-center gap-2">
                                 <img src="./assets/icons/pressure.svg" alt="Pressure icon" class="w-6 h-6">
@@ -158,6 +174,7 @@
                             <span id="pressure">--hPa</span>
                         </div>
 
+                        <!-- Visibility -->
                         <div class="flex flex-row sm:flex-col lg:flex-row gap-y-1 items-center justify-between">
                             <div class="flex sm:flex-col lg:flex-row items-center gap-2">
                                 <img src="./assets/icons/visibility.svg" alt="Visibility icon" class="w-6 h-6">
@@ -166,6 +183,7 @@
                             <span id="visibility">--km</span>
                         </div>
 
+                        <!-- Air Quality -->
                         <div class="flex flex-row sm:flex-col lg:flex-row gap-y-1 items-center justify-between">
                             <div class="flex sm:flex-col lg:flex-row items-center gap-2">
                                 <img src="./assets/icons/air-quality.svg" alt="Air quality icon" class="w-6 h-6">
@@ -177,16 +195,18 @@
                 </div>
             </main>
 
+            <!-- 5-Day Forecast Section -->
             <section class="p-4 md:p-8 mt-5">
                 <div>
-                    <h3 class="text-3xl font-bold mb-4 text-shadow">
-                        Next 5-Days Forecast
+                    <h3 class="text-4xl font-bold mb-4 text-shadow">
+                        5-Days Forecast
                     </h3>
                     <div id="forecast-container" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6 lg:gap-4 font-semibold">
                     </div>
                 </div>
             </section>
 
+            <!-- Recently Searched Cities -->
             <section id="recentlySearchedContainer" class="p-4 md:p-8 mt-5 cursor-pointer">
                 <div>
                     <h3 class="text-3xl font-bold mb-4 text-shadow">
@@ -198,8 +218,6 @@
                 </div>
             </section>
         </section>
-
     </div>
 </body>
-
 </html>
