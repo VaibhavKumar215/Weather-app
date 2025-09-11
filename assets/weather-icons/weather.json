@@ -7,7 +7,7 @@
     "10d": "./assets/weather-icons/dayTime/rain.svg",
     "11d": "./assets/weather-icons/dayTime/thunderstorm.svg",
     "13d": "./assets/weather-icons/dayTime/snow.svg",
-    "15d": "./assets/weather-icons/dayTime/mist.svg",
+    "50d": "./assets/weather-icons/dayTime/mist.svg",
     "01n": "./assets/weather-icons/nightTime/night.svg",
     "02n": "./assets/weather-icons/nightTime/cloudy-night.svg",
     "03n": "./assets/weather-icons/dayTime/scattered-cloud.svg",
@@ -16,5 +16,5 @@
     "10n": "./assets/weather-icons/nightTime/rainy-night.svg",
     "11n": "./assets/weather-icons/dayTime/thunderstorm.svg",
     "13n": "./assets/weather-icons/dayTime/snow.svg",
-    "15n": "./assets/weather-icons/dayTime/mist.svg"
+    "50n": "./assets/weather-icons/dayTime/mist.svg"
 }

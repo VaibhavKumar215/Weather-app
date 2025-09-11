@@ -31,17 +31,6 @@ let unit = "metric" //"°C" or "°F"
 let weatherWarningsData = null;
 let recentSearches = [];
 
-const backgroundImage = {
-    Clear: "",
-    Clouds: "",
-    Rain: '',
-    Dizzle: '',
-    Thunderstorm: '',
-    Snow: '',
-    Mist: '',
-    Default: ''
-}
-
 function showLoading() {
     loadingOverlay.classList.remove('hidden');
     loadingOverlay.classList.add('flex')
@@ -83,14 +72,27 @@ function getAqiInfo(aqi) {
 }
 
 function setBackground(weatherIcon) {
+    document.body.classList.remove("bg-gray-800");
+    document.body.style.backgroundImage = "";
+
     if (!bgImagesData) {
-        console.error("Background images not loaded yet");
-        document.body.classList.add("bg-black/50")
+        document.body.classList.add("bg-gray-800");
+        console.error("Background images JSON not loaded yet");
         return;
     }
-    const imageUrl = bgImagesData[weatherIcon] ||  bgImagesData["Default"];
+
+    const imageUrl = bgImagesData[weatherIcon];
+    console.log(imageUrl, weatherIcon);
+    
+    if (!imageUrl) {
+        document.body.classList.add("bg-gray-800");
+        console.error("No Background images found in the JSON file");
+        return;
+    }
+
     document.body.style.backgroundImage = `url(${imageUrl})`;
 }
+
 
 function setWeatherIcons(weatherIcon) {
     if (!weatherIconsData) {
@@ -98,6 +100,8 @@ function setWeatherIcons(weatherIcon) {
         return;
     }
     const iconUrl = weatherIconsData[weatherIcon]
+    if(!iconUrl)
+        return
     return iconUrl;
 }
 
@@ -121,6 +125,7 @@ async function loadAssets() {
         } else {
             throw new Error("Background Images fetch request failed: " + bgImagesResponse.reason);
         }
+        
 
         if (weatherIconsResponse.status === "fulfilled") {
             weatherIconsData = await weatherIconsResponse.value.json();
@@ -238,6 +243,7 @@ function updateUI(weather, forecast, aqi) {
     let weatherIcon = weather.weather[0].icon;
 
     currentWeatherIcon.src = `${setWeatherIcons(weatherIcon)}`;
+    setBackground(weatherIcon)
 
     cityName.textContent = `${weather.name}, ${weather.sys.country}`
 
@@ -277,7 +283,7 @@ function Weatherwarning(id) {
         return;
     } 
     const data = warningData.warningLevel;
-    warningSection.className = "flex justify-center items-center rounded-b-3xl p-5 h-14 text-base font-bold"
+    warningSection.className = "flex justify-center items-center rounded-b-3xl p-5 h-14 font-bold"
 
     if (data.level === 'high') {
         warningSection.classList.add("bg-gradient-to-r", "from-red-300/60", "to-red-500/40", "border", "border-red-400", "animate-pulse");
@@ -298,21 +304,21 @@ function fiveDaysWeather(dailyForecasts) {
     dailyForecasts.forEach(day => {
 
         const card = document.createElement('div');
-        card.className = `p-4 rounded-2xl text-center backdrop-blur-xl card `;
+        card.className = `p-4 rounded-2xl text-center backdrop-blur-md card `;
         card.innerHTML = `
             <p class="font-bold text-lg">${new Date(day.dt_txt).toLocaleDateString("en-US", { weekday: "short" })}</p>
             <img src="${setWeatherIcons(day.weather[0].icon)}" alt="${day.weather[0].description} icon" class="font-semibold mx-auto w-16 aspect-square ">
             
             <p>${Math.round(day.main.temp_max)}°/ ${Math.round(day.main.temp_min)}</p>
             <p class="font-semibold">${day.weather[0].description}</p>
-            <div class="p-2 sm:p-4 mt-1 rounded-2xl backdrop-blur-xl">
+            <div class="p-2 sm:p-4 mt-1 rounded-2xl backdrop-blur-3xl">
                 <div class="space-y-2 text-xs lg:text-sm">
                     <!-- Weather Details -->
                     <div class="flex items-center justify-between ">
                         <div class="flex items-center gap-2">
                             <img src="./assets/icons/humidity.svg" alt="Humidity icon" class="w-6 h-6">
                         </div>
-                        <span class="text-blue-400">${day.main.humidity} %</span>
+                        <span>${day.main.humidity} %</span>
                     </div>
 
                     <div class="flex items-center justify-between ">
@@ -326,7 +332,7 @@ function fiveDaysWeather(dailyForecasts) {
                         <div class="flex items-center gap-2">
                             <img src="./assets/icons/feels-like.svg" alt="Feels like icon" class="w-6 h-6">   
                         </div>
-                        <span class="text-yellow-400">${day.main.feels_like} ${getUnitSymbol()}</span>
+                        <span>${day.main.feels_like} ${getUnitSymbol()}</span>
                         </div>
                     </div>
                 </div>
@@ -479,17 +485,15 @@ async function renderRecentSearches() {
     }
 
     recentlySearchedContainer.classList.remove("hidden");
-    console.log(recentSearches)
-
     for (const cityName of recentSearches) {
         try {
             const day = await fetchWeather({ city: cityName, search: true });
             
             if (day) {
                 const card = document.createElement("div");
-                card.className = `p-4 rounded-2xl text-center backdrop-blur-xl card`;
+                card.className = `p-4 rounded-2xl text-center backdrop-blur-md card`;
                 card.innerHTML = `
-                    <p class="font-bold text-lg">${day.name}</p>
+                    <p class="font-bold text-lg">${day.name}, ${day.sys.country}</p>
                     
                     <img src="${setWeatherIcons(day.weather[0].icon)}" 
                          alt="${day.weather[0].description} icon" 
