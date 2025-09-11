@@ -312,7 +312,7 @@ function fiveDaysWeather(dailyForecasts) {
                         <div class="flex items-center gap-2">
                             <img src="./assets/icons/humidity.svg" alt="Humidity icon" class="w-6 h-6">
                         </div>
-                        <span>${day.main.humidity} %</span>
+                        <span class="text-blue-400">${day.main.humidity} %</span>
                     </div>
 
                     <div class="flex items-center justify-between ">
@@ -326,7 +326,7 @@ function fiveDaysWeather(dailyForecasts) {
                         <div class="flex items-center gap-2">
                             <img src="./assets/icons/feels-like.svg" alt="Feels like icon" class="w-6 h-6">   
                         </div>
-                        <span>${day.main.feels_like} ${getUnitSymbol()}</span>
+                        <span class="text-yellow-400">${day.main.feels_like} ${getUnitSymbol()}</span>
                         </div>
                     </div>
                 </div>
