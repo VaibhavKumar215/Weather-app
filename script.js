@@ -22,13 +22,14 @@ const pressure = document.getElementById("pressure");
 const visibility = document.getElementById("visibility");
 const airQuality = document.getElementById("airQuality");
 const toggleDegreeBtn = document.getElementById("toggleDegreeBtn");
+const searchedCityContainer = document.getElementById("searchedCity-container");
 const recentlySearchedContainer = document.getElementById('recentlySearchedContainer');
 
 // -------------------- CONSTANTS & GLOBAL STATE --------------------
 const OWNS_API_KEY = '50216c1c07ec7c0aeabcdfeaafb9b470'; // OpenWeatherMap API key
 
-let bgImagesData = null;       
-let weatherIconsData = null; 
+let bgImagesData = null;
+let weatherIconsData = null;
 let unit = "°C";
 let todayTemp = null;
 let todayFeelslike = {};
@@ -45,17 +46,16 @@ window.addEventListener("load", () => {
 // -------------------- LOADING STATE --------------------
 function showLoading() {
     loadingOverlay.classList.remove('hidden');
-    document.body.classList.add('overflow-hidden');
 }
 
 function hideLoading() {
     loadingOverlay.classList.add('hidden');
-    document.body.classList.remove('overflow-hidden');
 }
 
 // -------------------- ERROR HANDLING --------------------
 function showError(message) {
-    errorMessage.textContent = message;
+    errorMessage.innerHTML = "";
+    errorMessage.innerHTML = message;
     errorModal.showModal();
     document.body.classList.add('overflow-hidden');
 }
@@ -178,9 +178,9 @@ function loadRecentlySearchCities() {
 toggleDegreeBtn.addEventListener('click', () => {
     const fahrenheitBtn = document.getElementById("fahrenheit-btn");
     const celsiusBtn = document.getElementById("celsius-btn");
-    
+
     unit = unit === '°C' ? '°F' : '°C';
-    
+
     celsiusBtn.classList.toggle("active", unit === "°C");
     fahrenheitBtn.classList.toggle("active", unit === "°F");
 
@@ -264,7 +264,7 @@ function updateUI(weather, forecast, aqi) {
     currentDate.textContent = localDate(weather.dt + weather.timezone);
 
     // Current weather data
-    todayTemp = {'°C' : Math.round(weather.main.temp) , '°F': Math.round(weather.main.temp * 9/5) + 32};
+    todayTemp = { '°C': Math.round(weather.main.temp), '°F': Math.round(weather.main.temp * 9 / 5) + 32 };
     currentTemp.textContent = `${todayTemp['°C']} °C`;
     currentWeatherConditon.textContent = weather.weather[0].description;
 
@@ -276,7 +276,7 @@ function updateUI(weather, forecast, aqi) {
     humidity.textContent = weather.main.humidity + " %";
     windSpeed.textContent = `${(weather.wind.speed * 3.6).toFixed(1)} km/h`;
 
-    todayFeelslike = {'°C' : Math.round(weather.main.feels_like) , '°F': Math.round(weather.main.feels_like * 9/5) + 32};
+    todayFeelslike = { '°C': Math.round(weather.main.feels_like), '°F': Math.round(weather.main.feels_like * 9 / 5) + 32 };
     feelsLike.textContent = `${todayFeelslike['°C']} °C`;
     pressure.textContent = `${weather.main.pressure} hPa`;
     visibility.textContent = `${(weather.visibility / 1000).toFixed(1)} km`;
@@ -289,7 +289,14 @@ function updateUI(weather, forecast, aqi) {
     airQuality.classList.add(aqiInfo.color);
 
     // Show weather warning if applicable
-    Weatherwarning(weather.weather[0].id);
+    if (todayTemp['°C'] >= 40) {
+        Weatherwarning("EXTREME_HEAT");
+    }
+    else if (todayTemp['°C'] <= 0) {
+        Weatherwarning("EXTREME_COLD");
+    }
+    else
+        Weatherwarning(weather.weather[0].id);
 
     // Forecast
     const dailyForecasts = processForecast(forecast.list);
@@ -309,7 +316,7 @@ function Weatherwarning(id) {
 
     const data = warningData.warningLevel;
 
-    warningSection.className = "flex justify-center items-center rounded-b-3xl p-5 h-14 font-bold";
+    warningSection.className = "flex justify-center items-center text-center rounded-b-3xl p-4 h-16 font-bold text-lg";
 
     if (data.level === 'high') {
         warningSection.classList.add("bg-gradient-to-r", "from-red-300/60", "to-red-500/40", "border", "border-red-400", "animate-pulse");
@@ -413,8 +420,8 @@ searchForm.addEventListener('submit', (e) => {
         const state = place[1] || "";
         const country = place[2] || "";
 
-        fetchWeather({ city, state, country});
-        addRecentSearch({city, state, country});
+        fetchWeather({ city, state, country });
+        addRecentSearch({ city, state, country });
     }
     suggestionBox.classList.add("hidden");
     e.target.reset();
@@ -434,7 +441,7 @@ function debounce(func, delay) {
     let timeout;
     return (...args) => {
         clearTimeout(timeout);
-        
+
         timeout = setTimeout(() => {
             func(...args);
         }, delay);
@@ -487,43 +494,59 @@ async function handleCityInput(e) {
 currentLocationBtn.addEventListener('click', getCurrentLocation);
 
 function getCurrentLocation() {
-    if (navigator.geolocation) {
-        showLoading();
-        navigator.geolocation.getCurrentPosition(
-            (positon) => fetchWeather({ lat: positon.coords.latitude, lon: positon.coords.longitude }),
-            () => {
-                hideLoading();
-                console.log("Geolocation failed or denied. Fallback to default city Delhi.");
-                fetchWeather({ city: "Hyderabad", state: "Telangana", country: "IN" });
-            }
-        );
-    } else {
-        console.log("Geolocation not supported. Fallback to default city Delhi.");
+    
+    if (!navigator.geolocation) {
+        showError("Geolocation is not supported by your browser. Fallback to default city");
         fetchWeather({ city: "Hyderabad", state: "Telangana", country: "IN" });
+        return;
     }
+
+    showLoading();
+    navigator.geolocation.getCurrentPosition(
+        (positon) => fetchWeather({ lat: positon.coords.latitude, lon: positon.coords.longitude }).finally(hideLoading),
+        (error) => {
+            showError(`Geolocation failed or denied: ${error.message} <br> Fallback to default city`);
+            fetchWeather({ city: "Hyderabad", state: "Telangana", country: "IN" });
+        }
+    );
 }
 
 // -------------------- RECENT SEARCHES --------------------
-function addRecentSearch({ city, state = "", country = "" }) {
+async function addRecentSearch({ city, state = "", country = "" }) {
+    try {
+        const weatherData = await fetchWeather({ city, state, country, search: true });
+        if (!weatherData) return;
 
-    recentSearches = recentSearches.filter(
-        item => !(item.city === city && item.state === state && item.country === country)
-    );
+        const existingIndex = recentSearches.findIndex(
+            item => item.city === city && item.state === state && item.country === country
+        );
 
-    recentSearches.unshift({ city, state, country });
+        const searchedCityContainer = document.getElementById("searchedCity-container");
 
-    if (recentSearches.length > 6) {
-        recentSearches.pop();
+        if (existingIndex !== -1) {
+            const cardToRemove = searchedCityContainer.children[existingIndex];
+            if (cardToRemove) searchedCityContainer.removeChild(cardToRemove);
+
+            recentSearches.splice(existingIndex, 1);
+        }
+
+        recentSearches.unshift({ city, state, country });
+        if (recentSearches.length > 6) recentSearches.pop();
+
+        const card = createRecentSearchCard(weatherData, { city, state, country });
+        searchedCityContainer.prepend(card);
+        recentlySearchedContainer.classList.remove("hidden");
+
+        localStorage.setItem("RecentlySearchedCities", JSON.stringify(recentSearches));
+
+    } catch (error) {
+        console.error(`Failed to fetch weather for recent search: ${city}`, error);
     }
-
-    localStorage.setItem("RecentlySearchedCities", JSON.stringify(recentSearches));
-    renderRecentSearches();
 }
 
 
-// Render each recent search
+// RENDER EACH RECENT SEARCH
 async function renderRecentSearches() {
-    const searchedCityContainer = document.getElementById("searchedCity-container");
     searchedCityContainer.innerHTML = "";
 
     if (recentSearches.length === 0) return;
@@ -534,23 +557,7 @@ async function renderRecentSearches() {
         try {
             const day = await fetchWeather({ ...entry, search: true });
             if (day) {
-                const card = document.createElement("div");
-                card.className = `p-4 rounded-2xl text-center backdrop-blur-md card`;
-                card.innerHTML = `
-                    <p class="font-bold text-lg">${day.name}, ${day.sys.country}</p>
-                    <img src="${setWeatherIcons(day.weather[0].icon)}"
-                         alt="${day.weather[0].description} icon"
-                         class="font-semibold mx-auto w-16 aspect-square">
-                    <p>${Math.round(day.main.temp)}°C</p>
-                    <p class="font-semibold">${day.weather[0].description}</p>
-                `;
-
-                card.onclick = () => {
-                    fetchWeather(entry);
-                    addRecentSearch(entry);
-                    window.scrollTo({ top: 0 });
-                };
-
+                const card = createRecentSearchCard(day,entry);
                 searchedCityContainer.appendChild(card);
             }
         } catch (error) {
@@ -558,4 +565,30 @@ async function renderRecentSearches() {
         }
     }
 }
+
+// -------------------- CREATE RECENT SEARCH CARD --------------------
+function createRecentSearchCard(weatherData, entry) {
+    console.log(entry);
+    
+    const card = document.createElement("div");
+    card.className = `p-4 rounded-2xl text-center backdrop-blur-md card`;
+
+    card.innerHTML = `
+        <p class="font-bold text-lg">${weatherData.name}, ${weatherData.sys.country}</p>
+        <img src="${setWeatherIcons(weatherData.weather[0].icon)}"
+             alt="${weatherData.weather[0].description} icon"
+             class="font-semibold mx-auto w-16 aspect-square">
+        <p>${Math.round(weatherData.main.temp)}°C</p>
+        <p class="font-semibold">${weatherData.weather[0].description}</p>
+    `;
+
+    card.onclick = () => {
+        fetchWeather(entry);
+        addRecentSearch(entry);
+        window.scrollTo({ top: 0 });
+    };
+
+    return card
+}
+
 
