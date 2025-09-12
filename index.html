@@ -4,33 +4,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="A simple weather forecast web app built with JavaScript, HTML, and Tailwind CSS. Search by city or use your location to view current weather and a 5-day forecast.">
+    <meta name="description"
+        content="A simple weather forecast web app built with JavaScript, HTML, and Tailwind CSS. Search by city or use your location to view current weather and a 5-day forecast.">
     <meta name="keywords" content="weather app, weather forecast app, Today weather">
     <meta name="author" content="Your Name">
 
     <title>Weather Forecast App with Real-time Weather & 5-Day Forecast</title>
 
+    <link rel="shortcut icon" href="./assets/favicon.ico.svg" type="image/x-icon">
     <link href="./output.css" rel="stylesheet">
     <script src="./script.js" defer></script>
 
 </head>
 
-<body class="bg-black/20 text-white bg-cover bg-center bg-fixed bg-blend-darken bg-no-repeat overflow-y-auto transition-all duration-500 ease-in-out">
+<body
+    class="bg-black/20 text-white bg-cover bg-center bg-fixed bg-blend-darken bg-no-repeat overflow-y-auto transition-all duration-500 ease-in-out">
 
     <!-- Main container -->
     <div class="min-h-screen max-w-[120rem] m-auto">
 
         <!-- Loading Overlay (spinner shown when fetching data) -->
-        <div id="loading-overlay"
-            class="fixed inset-0 bg-gray-900 opacity-80 flex-col gap-y-3 items-center justify-center z-50 hidden ">
-            <div
-                class="w-12 h-12 border-8 border-blue-500 border-dotted rounded-full animate-spin [animation-duration:3s] ">
+        <div id="loading-overlay" class="fixed inset-0 bg-gray-900/80 z-50 hidden">
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center">
+                <div
+                    class="w-12 h-12 mx-auto border-8 border-blue-500 border-dotted rounded-full animate-spin [animation-duration:3s]">
+                </div>
+                <p class="text-xl mt-3">Fetching Your Weather</p>
             </div>
-            <p class="text-xl">Fetching Your Weather</p>
         </div>
 
         <!-- Error Modal (shown when API fetch fails) -->
-        <dialog id="error-modal" class="border m-auto rounded-xl transform duration-300 ease-out scale-0">
+        <dialog id="error-modal" class="border m-auto rounded-xl">
             <div class="bg-red-600 border border-red-400 rounded-lg shadow-xl p-6 text-center text-white">
                 <h3 class="text-2xl font-bold mb-4">Oops! Something went wrong</h3>
                 <p id="errorMessage" class="mb-6">Could not fetch weather data</p>
@@ -42,7 +46,8 @@
         </dialog>
 
         <!-- Header / Navigation -->
-        <header class="flex flex-col md:flex-row items-center justify-between gap-4 p-6 backdrop-blur-lg sticky top-0 bg-black/30 z-20">
+        <header
+            class="flex flex-col md:flex-row items-center justify-between gap-4 p-6 backdrop-blur-md sticky top-0 bg-black/30 z-20">
             <h1 class="flex-shrink-0 text-2xl font-bold">🌤️ Weather App</h1>
 
             <!-- Search Form -->
@@ -81,13 +86,13 @@
         </header>
 
         <!-- Main Weather Section -->
-        <section class="lg:px-20 ">
+        <section class="px-0 lg:px-10 xl:px-20">
             <main class="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-8 p-4 md:p-8 items-center">
 
                 <!-- Current Weather Card -->
                 <div class="lg:col-span-2 backdrop-blur-xs rounded-3xl card ">
                     <div
-                        class="relative flex flex-col sm:flex-row justify-center items-center  p-4 md:p-8 shadow-2xl text-shadow-[4px_4px_6px_rgb(0,0,0,0.5)]">
+                        class="relative flex flex-col sm:flex-row justify-center items-center p-4 md:p-8 shadow-2xl text-shadow-[4px_4px_6px_rgb(0,0,0,0.5)]">
 
                         <!-- City + Temperature Info -->
                         <div class="text-center sm:text-left mt-5 sm:mt-0">
@@ -108,7 +113,8 @@
                             class="w-32 sm:w-48 md:w-64 aspect-square">
 
                         <!-- Temperature Unit Toggle -->
-                        <div id="toggleDegreeBtn" class="absolute top-3 right-3 flex rounded-full p-1 w-18 sm:w-24 bg-white/20">
+                        <div id="toggleDegreeBtn"
+                            class="absolute top-3 right-3 flex rounded-full p-1 w-18 sm:w-24 bg-white/20">
                             <button id="celsius-btn" class="toggle-btn active">°C</button>
                             <button id="fahrenheit-btn" class="toggle-btn">°F</button>
                         </div>
@@ -121,7 +127,7 @@
                 </div>
 
                 <!-- Weather Details (side card) -->
-                <div class="p-6 rounded-2xl backdrop-blur-lg flex flex-col gap-y-5 card ">
+                <div class="p-6 rounded-2xl backdrop-blur-md flex flex-col gap-y-5 card ">
 
                     <!-- Sunrise & Sunset -->
                     <div class="grid grid-cols-2 gap-6 text-center border-b border-white/20 pb-5">
@@ -201,7 +207,8 @@
                     <h3 class="text-4xl font-bold mb-4 text-shadow">
                         5-Days Forecast
                     </h3>
-                    <div id="forecast-container" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6 lg:gap-4 font-semibold">
+                    <div id="forecast-container"
+                        class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6 lg:gap-4 font-semibold">
                     </div>
                 </div>
             </section>
@@ -220,4 +227,5 @@
         </section>
     </div>
 </body>
+
 </html>

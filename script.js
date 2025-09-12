@@ -43,26 +43,25 @@ window.addEventListener("load", () => {
 // -------------------- LOADING STATE --------------------
 function showLoading() {
     loadingOverlay.classList.remove('hidden');
-    loadingOverlay.classList.add('flex');
+    document.body.classList.remove('overflow-hidden');
 }
 
 function hideLoading() {
     loadingOverlay.classList.add('hidden');
-    loadingOverlay.classList.remove('flex');
+    document.body.classList.add('overflow-hidden');
 }
 
 // -------------------- ERROR HANDLING --------------------
 function showError(message) {
     errorMessage.textContent = message;
     errorModal.showModal();
-    errorModal.classList.replace('scale-0', 'scale-100');
     document.body.classList.add('overflow-hidden');
 }
 
 closeModalbtn.addEventListener('click', () => {
     errorMessage.textContent = '';
-    errorModal.classList.replace('scale-100', 'scale-0');
     errorModal.close();
+    document.body.classList.remove('overflow-hidden');
 });
 
 // -------------------- UTILS --------------------
