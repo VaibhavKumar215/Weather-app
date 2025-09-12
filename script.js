@@ -29,8 +29,10 @@ const OWNS_API_KEY = '50216c1c07ec7c0aeabcdfeaafb9b470'; // OpenWeatherMap API k
 
 let bgImagesData = null;       
 let weatherIconsData = null; 
-let unit = "metric";           // Current temperature unit: "metric" (°C) or "imperial" (°F)
-let weatherWarningsData = null;
+let unit = "°C";
+let todayTemp = null;
+let todayFeelslike = {};
+let weatherWarningsData = {};
 let recentSearches = [];
 
 // -------------------- INIT --------------------
@@ -67,24 +69,24 @@ closeModalbtn.addEventListener('click', () => {
 // -------------------- UTILS --------------------
 function localDate(date) {
     return new Date(date * 1000).toLocaleDateString("en-Us", {
-        weekday: "long", month: "long", day: "numeric", timeZone: "UTC"
+        weekday: "long", month: "long", day: "numeric"
     });
 }
 
 function formatTime(timestamp) {
     return new Date(timestamp * 1000).toLocaleTimeString("en-Us", {
-        hour: '2-digit', minute: '2-digit', hour12: true, timeZone: "UTC"
+        hour: '2-digit', minute: '2-digit', hour12: true
     });
 }
 
 function getAqiInfo(aqi) {
     // Maps AQI levels to description and Tailwind color
     switch (aqi) {
-        case 1: return { text: "Good", color: "bg-green-500" };
-        case 2: return { text: "Fair", color: "bg-yellow-500" };
-        case 3: return { text: "Moderate", color: "bg-orange-500" };
+        case 1: return { text: "Good", color: "bg-green-400" };
+        case 2: return { text: "Fair", color: "bg-yellow-400" };
+        case 3: return { text: "Moderate", color: "bg-orange-400" };
         case 4: return { text: "Poor", color: "bg-red-200" };
-        case 5: return { text: "Very Poor", color: "bg-purple-700" };
+        case 5: return { text: "Very Poor", color: "bg-purple-600" };
     }
 }
 
@@ -172,28 +174,23 @@ function loadRecentlySearchCities() {
 }
 
 // -------------------- UNIT TOGGLE --------------------
-function getUnitSymbol() {
-    return unit === "metric" ? "°C" : "°F";
-}
 
 toggleDegreeBtn.addEventListener('click', () => {
     const fahrenheitBtn = document.getElementById("fahrenheit-btn");
     const celsiusBtn = document.getElementById("celsius-btn");
+    
+    unit = unit === '°C' ? '°F' : '°C';
+    
+    celsiusBtn.classList.toggle("active", unit === "°C");
+    fahrenheitBtn.classList.toggle("active", unit === "°F");
 
-    // Toggle unit
-    unit = (unit === "metric") ? "imperial" : "metric";
-
-    // Update button states
-    celsiusBtn.classList.toggle("active", unit === "metric");
-    fahrenheitBtn.classList.toggle("active", unit === "imperial");
-
-    // Refetch weather
-    fetchWeather({ city: cityName.textContent.split(',')[0].trim() });
-    renderRecentSearches();
+    currentTemp.textContent = `${todayTemp[unit]} ${unit}`;
+    feelsLike.textContent = `${Math.round(todayFeelslike[unit])} ${unit}`;
 });
 
+
 // -------------------- WEATHER FETCH --------------------
-async function fetchWeather({ lat, lon, city, search = false }) {
+async function fetchWeather({ lat, lon, city, state = "", country = "", search = false }) {
     if (!search) showLoading();
     try {
         let latitude = lat;
@@ -202,18 +199,21 @@ async function fetchWeather({ lat, lon, city, search = false }) {
         if (!OWNS_API_KEY) throw new Error("OpenWeatherMap API Key is missing");
 
         if (city) {
-            const geoUrl = `https://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=1&appid=${OWNS_API_KEY}`;
+            const query = [city, state, country].filter(Boolean).join(",");
+
+            const geoUrl = `https://api.openweathermap.org/geo/1.0/direct?q=${query}&limit=1&appid=${OWNS_API_KEY}`;
             const getLocation = await fetch(geoUrl);
             const geoData = await getLocation.json();
+
             if (!getLocation.ok || geoData.length === 0) {
-                throw new Error(`Could not find location data for ${city}`);
+                throw new Error(`Could not find location data for "${query}"`);
             }
             latitude = geoData[0].lat;
             longitude = geoData[0].lon;
         }
 
-        // Weather API
-        const weatherUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${OWNS_API_KEY}&units=${unit}`;
+        // 🔹 Weather API
+        const weatherUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${OWNS_API_KEY}&units=metric`;
 
         if (search) {
             const weatherUrlresponse = await fetch(weatherUrl);
@@ -222,8 +222,8 @@ async function fetchWeather({ lat, lon, city, search = false }) {
             return await weatherUrlresponse.json();
         }
 
-        // Forecast + Air Quality
-        const forecastUrl = `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&appid=${OWNS_API_KEY}&units=${unit}`;
+        // 🔹 Forecast + Air Quality
+        const forecastUrl = `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&appid=${OWNS_API_KEY}&units=metric`;
         const airQualityUrl = `https://api.openweathermap.org/data/2.5/air_pollution?lat=${latitude}&lon=${longitude}&appid=${OWNS_API_KEY}`;
 
         const [weatherUrlresponse, forecastUrlresponse, airQualityUrlresponse] = await Promise.all([
@@ -250,6 +250,7 @@ async function fetchWeather({ lat, lon, city, search = false }) {
     }
 }
 
+
 // -------------------- UPDATE UI --------------------
 function updateUI(weather, forecast, aqi) {
     let weatherIcon = weather.weather[0].icon;
@@ -263,7 +264,8 @@ function updateUI(weather, forecast, aqi) {
     currentDate.textContent = localDate(weather.dt + weather.timezone);
 
     // Current weather data
-    currentTemp.textContent = `${Math.round(weather.main.temp)} ${getUnitSymbol()}`;
+    todayTemp = {'°C' : Math.round(weather.main.temp) , '°F': Math.round(weather.main.temp * 9/5) + 32};
+    currentTemp.textContent = `${todayTemp['°C']} °C`;
     currentWeatherConditon.textContent = weather.weather[0].description;
 
     // Sunrise/Sunset
@@ -273,7 +275,9 @@ function updateUI(weather, forecast, aqi) {
     // Other weather details
     humidity.textContent = weather.main.humidity + " %";
     windSpeed.textContent = `${(weather.wind.speed * 3.6).toFixed(1)} km/h`;
-    feelsLike.textContent = `${Math.round(weather.main.feels_like)} ${getUnitSymbol()}`;
+
+    todayFeelslike = {'°C' : Math.round(weather.main.feels_like) , '°F': Math.round(weather.main.feels_like * 9/5) + 32};
+    feelsLike.textContent = `${todayFeelslike['°C']} °C`;
     pressure.textContent = `${weather.main.pressure} hPa`;
     visibility.textContent = `${(weather.visibility / 1000).toFixed(1)} km`;
 
@@ -332,7 +336,7 @@ function fiveDaysWeather(dailyForecasts) {
             <img src="${setWeatherIcons(day.weather[0].icon)}" 
                  alt="${day.weather[0].description} icon" 
                  class="font-semibold mx-auto w-16 aspect-square ">
-            <p>${Math.round(day.main.temp_max)}°/ ${Math.round(day.main.temp_min)}</p>
+            <p>${Math.round(day.main.temp_max)}°/ ${Math.round(day.main.temp_min)}°</p>
             <p class="font-semibold">${day.weather[0].description}</p>
 
             <!-- Weather Details -->
@@ -348,7 +352,7 @@ function fiveDaysWeather(dailyForecasts) {
                     </div>
                     <div class="flex items-center justify-between">
                         <img src="./assets/icons/feels-like.svg" alt="feels like icon" class="w-6 h-6">
-                        <span>${day.main.feels_like} ${getUnitSymbol()}</span>
+                        <span>${day.main.feels_like} °C</span>
                     </div>
                 </div>
             </div>
@@ -401,10 +405,16 @@ function processForecast(forecastList) {
 // -------------------- SEARCH HANDLING --------------------
 searchForm.addEventListener('submit', (e) => {
     e.preventDefault();
-    const city = cityInput.value.trim();
-    if (city) {
-        fetchWeather({ city });
-        addRecentSearch(city);
+    const input = cityInput.value.trim();
+    if (input) {
+        const place = input.split(",").map(p => p.trim());
+
+        const city = place[0];
+        const state = place[1] || "";
+        const country = place[2] || "";
+
+        fetchWeather({ city, state, country});
+        addRecentSearch({city, state, country});
     }
     suggestionBox.classList.add("hidden");
     e.target.reset();
@@ -424,15 +434,16 @@ function debounce(func, delay) {
     let timeout;
     return (...args) => {
         clearTimeout(timeout);
+        
         timeout = setTimeout(() => {
-            func.apply(this, args);
+            func(...args);
         }, delay);
     };
 }
 
 // -------------------- CITY SUGGESTIONS --------------------
 async function handleCityInput(e) {
-    const query = e.target.value;
+    const query = e.target.value.trim();
     if (!query) {
         suggestionBox.classList.add("hidden");
         return;
@@ -448,18 +459,17 @@ async function handleCityInput(e) {
 
         if (cities.length > 0) {
             suggestionBox.classList.remove("hidden");
-            cities.forEach(city => {
+            cities.forEach(c => {
                 const div = document.createElement("div");
                 div.className = 'p-3 hover:bg-white/20 cursor-pointer';
-                div.textContent = `${city.name}, ${city.state ? city.state + ',' : ''}${city.country}`;
+                div.textContent = `${c.name}${c.state ? ", " + c.state : ""}, ${c.country}`;
 
-                // On suggestion click → fetch weather
                 div.onclick = () => {
-                    cityInput.value = city.name + ',' + city.country;
+                    const fullCity = { city: c.name, state: c.state || "", country: c.country };
                     suggestionBox.classList.add('hidden');
-                    fetchWeather({ city: city.name });
+                    fetchWeather(fullCity);
+                    addRecentSearch(fullCity);
                     cityInput.value = '';
-                    addRecentSearch(city.name);
                 };
 
                 suggestionBox.appendChild(div);
@@ -472,6 +482,7 @@ async function handleCityInput(e) {
     }
 }
 
+
 // -------------------- CURRENT LOCATION --------------------
 currentLocationBtn.addEventListener('click', getCurrentLocation);
 
@@ -483,29 +494,32 @@ function getCurrentLocation() {
             () => {
                 hideLoading();
                 console.log("Geolocation failed or denied. Fallback to default city Delhi.");
-                fetchWeather({ city: "Delhi" });
+                fetchWeather({ city: "Hyderabad", state: "Telangana", country: "IN" });
             }
         );
     } else {
         console.log("Geolocation not supported. Fallback to default city Delhi.");
-        fetchWeather({ city: "Delhi" });
+        fetchWeather({ city: "Hyderabad", state: "Telangana", country: "IN" });
     }
 }
 
 // -------------------- RECENT SEARCHES --------------------
-function addRecentSearch(city) {
-    const cityName = city.trim().toLowerCase();
-    recentSearches = recentSearches.filter(item => item !== cityName);
+function addRecentSearch({ city, state = "", country = "" }) {
 
-    recentSearches.unshift(cityName);
+    recentSearches = recentSearches.filter(
+        item => !(item.city === city && item.state === state && item.country === country)
+    );
 
-    if (recentSearches.length > 5) {
+    recentSearches.unshift({ city, state, country });
+
+    if (recentSearches.length > 6) {
         recentSearches.pop();
     }
 
     localStorage.setItem("RecentlySearchedCities", JSON.stringify(recentSearches));
     renderRecentSearches();
 }
+
 
 // Render each recent search
 async function renderRecentSearches() {
@@ -515,10 +529,10 @@ async function renderRecentSearches() {
     if (recentSearches.length === 0) return;
 
     recentlySearchedContainer.classList.remove("hidden");
-    
-    for (const cityName of recentSearches) {
+
+    for (const entry of recentSearches) {
         try {
-            const day = await fetchWeather({ city: cityName, search: true });
+            const day = await fetchWeather({ ...entry, search: true });
             if (day) {
                 const card = document.createElement("div");
                 card.className = `p-4 rounded-2xl text-center backdrop-blur-md card`;
@@ -527,14 +541,13 @@ async function renderRecentSearches() {
                     <img src="${setWeatherIcons(day.weather[0].icon)}"
                          alt="${day.weather[0].description} icon"
                          class="font-semibold mx-auto w-16 aspect-square">
-                    <p>${Math.round(day.main.temp_max)}° / ${Math.round(day.main.temp_min)}°</p>
+                    <p>${Math.round(day.main.temp)}°C</p>
                     <p class="font-semibold">${day.weather[0].description}</p>
                 `;
 
-                // On click → fetch weather again
                 card.onclick = () => {
-                    fetchWeather({ city: cityName });
-                    addRecentSearch(cityName);
+                    fetchWeather(entry);
+                    addRecentSearch(entry);
                     window.scrollTo({ top: 0 });
                 };
 
@@ -545,3 +558,4 @@ async function renderRecentSearches() {
         }
     }
 }
+
