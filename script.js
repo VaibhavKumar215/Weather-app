@@ -43,12 +43,12 @@ window.addEventListener("load", () => {
 // -------------------- LOADING STATE --------------------
 function showLoading() {
     loadingOverlay.classList.remove('hidden');
-    document.body.classList.remove('overflow-hidden');
+    document.body.classList.add('overflow-hidden');
 }
 
 function hideLoading() {
     loadingOverlay.classList.add('hidden');
-    document.body.classList.add('overflow-hidden');
+    document.body.classList.remove('overflow-hidden');
 }
 
 // -------------------- ERROR HANDLING --------------------
@@ -83,7 +83,7 @@ function getAqiInfo(aqi) {
         case 1: return { text: "Good", color: "bg-green-500" };
         case 2: return { text: "Fair", color: "bg-yellow-500" };
         case 3: return { text: "Moderate", color: "bg-orange-500" };
-        case 4: return { text: "Poor", color: "bg-gray-200" };
+        case 4: return { text: "Poor", color: "bg-red-200" };
         case 5: return { text: "Very Poor", color: "bg-purple-700" };
     }
 }
@@ -339,15 +339,15 @@ function fiveDaysWeather(dailyForecasts) {
             <div class="p-2 sm:p-4 mt-1 rounded-2xl backdrop-blur-3xl">
                 <div class="space-y-2 text-xs lg:text-sm">
                     <div class="flex items-center justify-between">
-                        <img src="./assets/icons/humidity.svg" class="w-6 h-6">
+                        <img src="./assets/icons/humidity.svg" alt="humidity icon" class="w-6 h-6">
                         <span>${day.main.humidity} %</span>
                     </div>
                     <div class="flex items-center justify-between">
-                        <img src="./assets/icons/wind.svg" class="w-6 h-6">
+                        <img src="./assets/icons/wind.svg" alt="wind icon" class="w-6 h-6">
                         <span>${day.wind.speed} km/h</span>
                     </div>
                     <div class="flex items-center justify-between">
-                        <img src="./assets/icons/feels-like.svg" class="w-6 h-6">
+                        <img src="./assets/icons/feels-like.svg" alt="feels like icon" class="w-6 h-6">
                         <span>${day.main.feels_like} ${getUnitSymbol()}</span>
                     </div>
                 </div>
@@ -482,13 +482,13 @@ function getCurrentLocation() {
             (positon) => fetchWeather({ lat: positon.coords.latitude, lon: positon.coords.longitude }),
             () => {
                 hideLoading();
-                console.log("Geolocation failed or denied. Fallback to Hyderabad");
-                fetchWeather({ city: "Hydrabad" });
+                console.log("Geolocation failed or denied. Fallback to default city Delhi.");
+                fetchWeather({ city: "Delhi" });
             }
         );
     } else {
-        console.log("Geolocation not supported. Fallback to Hyderabad.");
-        fetchWeather({ city: "Hydrabad" });
+        console.log("Geolocation not supported. Fallback to default city Delhi.");
+        fetchWeather({ city: "Delhi" });
     }
 }
 
@@ -535,7 +535,7 @@ async function renderRecentSearches() {
                 card.onclick = () => {
                     fetchWeather({ city: cityName });
                     addRecentSearch(cityName);
-                    window.scrollTo({ top: 0, behavior: "smooth" });
+                    window.scrollTo({ top: 0 });
                 };
 
                 searchedCityContainer.appendChild(card);
