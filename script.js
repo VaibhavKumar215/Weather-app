@@ -69,13 +69,13 @@ closeModalbtn.addEventListener('click', () => {
 // -------------------- UTILS --------------------
 function localDate(date) {
     return new Date(date * 1000).toLocaleDateString("en-Us", {
-        weekday: "long", month: "long", day: "numeric"
+        weekday: "long", month: "long", day: "numeric" , timeZone: 'UTC'
     });
 }
 
 function formatTime(timestamp) {
     return new Date(timestamp * 1000).toLocaleTimeString("en-Us", {
-        hour: '2-digit', minute: '2-digit', hour12: true
+        hour: '2-digit', minute: '2-digit', hour12: true , timeZone: "UTC"
     });
 }
 
@@ -185,8 +185,32 @@ toggleDegreeBtn.addEventListener('click', () => {
     fahrenheitBtn.classList.toggle("active", unit === "°F");
 
     currentTemp.textContent = `${todayTemp[unit]} ${unit}`;
-    feelsLike.textContent = `${Math.round(todayFeelslike[unit])} ${unit}`;
+    feelsLike.textContent = `${todayFeelslike[unit]} ${unit}`;
 });
+
+// -------------------- CREATE RECENT SEARCH CARD --------------------
+function createRecentSearchCard(weatherData, entry) {
+    
+    const card = document.createElement("div");
+    card.className = `p-4 rounded-2xl text-center backdrop-blur-md card`;
+
+    card.innerHTML = `
+        <p class="font-bold text-lg">${weatherData.name}, ${weatherData.sys.country}</p>
+        <img src="${setWeatherIcons(weatherData.weather[0].icon)}"
+             alt="${weatherData.weather[0].description} icon"
+             class="font-semibold mx-auto w-16 aspect-square">
+        <p>${Math.round(weatherData.main.temp)}°C</p>
+        <p class="font-semibold">${weatherData.weather[0].description}</p>
+    `;
+
+    card.onclick = () => {
+        fetchWeather(entry);
+        addRecentSearch(entry);
+        window.scrollTo({ top: 0 });
+    };
+
+    return card
+}
 
 
 // -------------------- WEATHER FETCH --------------------
@@ -269,6 +293,7 @@ function updateUI(weather, forecast, aqi) {
     currentWeatherConditon.textContent = weather.weather[0].description;
 
     // Sunrise/Sunset
+    console.log(new Date(weather.sys.sunrise *1000).toLocaleTimeString());
     sunriseTime.textContent = formatTime(weather.sys.sunrise + weather.timezone);
     sunsetTime.textContent = formatTime(weather.sys.sunset + weather.timezone);
 
@@ -292,7 +317,7 @@ function updateUI(weather, forecast, aqi) {
     if (todayTemp['°C'] >= 40) {
         Weatherwarning("EXTREME_HEAT");
     }
-    else if (todayTemp['°C'] <= 0) {
+    else if (todayTemp['°C'] <= 5) {
         Weatherwarning("EXTREME_COLD");
     }
     else
@@ -315,8 +340,6 @@ function Weatherwarning(id) {
     }
 
     const data = warningData.warningLevel;
-
-    warningSection.className = "flex justify-center items-center text-center rounded-b-3xl p-4 h-16 font-bold text-lg";
 
     if (data.level === 'high') {
         warningSection.classList.add("bg-gradient-to-r", "from-red-300/60", "to-red-500/40", "border", "border-red-400", "animate-pulse");
@@ -566,29 +589,5 @@ async function renderRecentSearches() {
     }
 }
 
-// -------------------- CREATE RECENT SEARCH CARD --------------------
-function createRecentSearchCard(weatherData, entry) {
-    console.log(entry);
-    
-    const card = document.createElement("div");
-    card.className = `p-4 rounded-2xl text-center backdrop-blur-md card`;
-
-    card.innerHTML = `
-        <p class="font-bold text-lg">${weatherData.name}, ${weatherData.sys.country}</p>
-        <img src="${setWeatherIcons(weatherData.weather[0].icon)}"
-             alt="${weatherData.weather[0].description} icon"
-             class="font-semibold mx-auto w-16 aspect-square">
-        <p>${Math.round(weatherData.main.temp)}°C</p>
-        <p class="font-semibold">${weatherData.weather[0].description}</p>
-    `;
-
-    card.onclick = () => {
-        fetchWeather(entry);
-        addRecentSearch(entry);
-        window.scrollTo({ top: 0 });
-    };
-
-    return card
-}
 
 
