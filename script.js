@@ -26,7 +26,8 @@ const searchedCityContainer = document.getElementById("searchedCity-container");
 const recentlySearchedContainer = document.getElementById('recentlySearchedContainer');
 
 // -------------------- CONSTANTS & GLOBAL STATE --------------------
-const OWNS_API_KEY = '50216c1c07ec7c0aeabcdfeaafb9b470'; // OpenWeatherMap API key
+// OpenWeatherMap API key
+const OWNS_API_KEY = '50216c1c07ec7c0aeabcdfeaafb9b470'; 
 
 let bgImagesData = null;
 let weatherIconsData = null;
@@ -338,6 +339,8 @@ function Weatherwarning(id) {
         console.error("Cannot fetch warning data for ID:", id);
         return;
     }
+
+    warningSection.className = "flex justify-center items-center text-center rounded-b-3xl p-4 h-16 font-bold text-lg";
 
     const data = warningData.warningLevel;
 
