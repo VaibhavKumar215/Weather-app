@@ -18,10 +18,10 @@
 </head>
 
 <body
-    class="bg-black/20 text-white bg-cover bg-center bg-fixed bg-blend-darken bg-no-repeat transition-all duration-500 ease-in-out">
+    class="bg-black/20 text-white bg-cover bg-center bg-blend-darken bg-no-repeat transition-all duration-500 ease-in-out">
 
     <!-- Main container -->
-    <div class="min-h-screen max-w-[120rem] m-auto">
+    <div class="min-h-screen max-w-7xl m-auto">
 
         <!-- Loading Overlay (spinner shown when fetching data) -->
         <div id="loading-overlay" class="fixed inset-0 bg-gray-900/80 z-50 hidden">
@@ -47,8 +47,8 @@
 
         <!-- Header / Navigation -->
         <header
-            class="flex flex-col md:flex-row items-center justify-between gap-4 p-6 backdrop-blur-md sticky top-0 bg-black/30 z-20">
-            <h1 class="flex-shrink-0 text-2xl font-bold">🌤️ Weather App</h1>
+            class="flex flex-col md:flex-row items-center justify-between gap-5 p-6 backdrop-blur-md sticky top-0 bg-black/30 z-20">
+            <h1 class="flex-shrink-0 text-2xl font-bold">🌤️ Weather Dashboard</h1>
 
             <!-- Search Form -->
             <div class="w-full md:w-auto md:place-items-end">
@@ -57,7 +57,7 @@
                     <!-- City Search Input -->
                     <div class="relative w-full md:w-[40vw] lg:max-w-[510px]">
                         <input type="search" name="city-input" id="city-input" placeholder="Search for any city..."
-                            class="w-full rounded-full border border-gray-600 bg-white/30 px-5 py-2.5 focus:outline-none placeholder-gray-300">
+                            class="w-full rounded-full border border-gray-600 bg-white/30 px-5 py-2 placeholder-gray-300">
 
                         <!-- Suggestion Dropdown -->
                         <div id="suggestion-box"
@@ -67,7 +67,7 @@
 
                     <!-- Search Button -->
                     <button type="submit" id="search-btn"
-                        class="bg-blue-500 rounded-xl py-1 px-3 lg:px-2 text-white hover:bg-blue-600 cursor-pointer"
+                        class="bg-blue-500 rounded-xl py-0.5 px-3 lg:px-2 text-white hover:bg-blue-600 cursor-pointer"
                         title="Search cities">
                         <span class="hidden lg:inline">Search</span>
                         <span class="inline lg:hidden"><img src="./assets/icons/search.svg" alt="Search button"></span>
@@ -75,7 +75,7 @@
 
                     <!-- Current Location Button -->
                     <button type="button" id="currentLocation-btn"
-                        class="bg-red-500 rounded-xl py-1 px-3 lg:px-2 hover:bg-red-600 cursor-pointer"
+                        class="bg-red-500 rounded-xl py-0.5 px-3 lg:px-2 hover:bg-red-600 cursor-pointer"
                         title="Use my location">
                         <span class="hidden lg:inline">Use my location</span>
                         <span class="inline lg:hidden"><img src="./assets/icons/Location.svg"
@@ -86,7 +86,7 @@
         </header>
 
         <!-- Main Weather Section -->
-        <section class="px-0 lg:px-10 xl:px-20">
+        <section class="px-0 lg:px-10">
             <main class="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-8 p-4 md:p-8 items-center">
 
                 <!-- Current Weather Card -->
@@ -95,7 +95,7 @@
                         class="relative flex flex-col sm:flex-row justify-center items-center p-4 md:p-8 shadow-2xl text-shadow-[4px_4px_6px_rgb(0,0,0,0.5)]">
 
                         <!-- City + Temperature Info -->
-                        <div class="text-center sm:text-left mt-5 sm:mt-0">
+                        <div class="text-center sm:text-left mt-8 sm:mt-0">
                             <h2 id="cityName" class="text-3xl sm:text-4xl md:text-5xl">City Name</h2>
                             <p id="currentDate" class="text-base sm:text-lg text-gray-300">
                                 Monday, September 07
@@ -114,7 +114,7 @@
 
                         <!-- Temperature Unit Toggle -->
                         <div id="toggleDegreeBtn"
-                            class="absolute top-3 right-3 flex rounded-full p-1 w-18 sm:w-24 bg-white/20">
+                            class="absolute top-3 right-3 flex rounded-full p-0.5 w-18 sm:w-24 bg-white/20">
                             <button id="celsius-btn" class="toggle-btn active">°C</button>
                             <button id="fahrenheit-btn" class="toggle-btn">°F</button>
                         </div>

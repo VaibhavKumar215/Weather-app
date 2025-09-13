@@ -25,6 +25,7 @@ const toggleDegreeBtn = document.getElementById("toggleDegreeBtn");
 const searchedCityContainer = document.getElementById("searchedCity-container");
 const recentlySearchedContainer = document.getElementById('recentlySearchedContainer');
 
+
 // -------------------- CONSTANTS & GLOBAL STATE --------------------
 // OpenWeatherMap API key
 const OWNS_API_KEY = '50216c1c07ec7c0aeabcdfeaafb9b470'; 
@@ -36,12 +37,18 @@ let todayTemp = null;
 let todayFeelslike = {};
 let weatherWarningsData = {};
 let recentSearches = [];
+let myFirstVisit = false;
 
 // -------------------- INIT --------------------
 window.addEventListener("load", () => {
     loadAssets();
-    getCurrentLocation();
+     if (!myFirstVisit) {
+        myFirstVisit = localStorage.getItem("firstVisitDone") || false;
+        localStorage.setItem("firstVisitDone", "true");
+    }
+    getCurrentLocation(!myFirstVisit);
     loadRecentlySearchCities();
+    
 });
 
 // -------------------- LOADING STATE --------------------
@@ -294,7 +301,6 @@ function updateUI(weather, forecast, aqi) {
     currentWeatherConditon.textContent = weather.weather[0].description;
 
     // Sunrise/Sunset
-    console.log(new Date(weather.sys.sunrise *1000).toLocaleTimeString());
     sunriseTime.textContent = formatTime(weather.sys.sunrise + weather.timezone);
     sunsetTime.textContent = formatTime(weather.sys.sunset + weather.timezone);
 
@@ -340,18 +346,18 @@ function Weatherwarning(id) {
         return;
     }
 
-    warningSection.className = "flex justify-center items-center text-center rounded-b-3xl p-4 h-16 font-bold text-lg";
+    warningSection.className = "flex justify-center items-center text-center rounded-b-3xl p-4 h-16 font-bold";
 
     const data = warningData.warningLevel;
 
     if (data.level === 'high') {
-        warningSection.classList.add("bg-gradient-to-r", "from-red-300/60", "to-red-500/40", "border", "border-red-400", "animate-pulse");
+        warningSection.classList.add("bg-gradient-to-r", "from-red-400/60", "to-red-500/40", "border", "border-red-400", "animate-pulse");
     }
     else if (data.level === "medium") {
-        warningSection.classList.add("bg-gradient-to-r", "from-yellow-300/60", "to-yellow-500/40", "border", "border-yellow-300");
+        warningSection.classList.add("bg-gradient-to-r", "from-yellow-400/60", "to-yellow-500/40", "border", "border-yellow-300");
     }
     else {
-        warningSection.classList.add("bg-gradient-to-r", "from-green-300/60", "to-green-500/40", "border", "border-green-300");
+        warningSection.classList.add("bg-gradient-to-r", "from-green-400/60", "to-green-500/40", "border", "border-green-300");
     }
 
     warningDescription.textContent = data.warning;
@@ -519,10 +525,11 @@ async function handleCityInput(e) {
 // -------------------- CURRENT LOCATION --------------------
 currentLocationBtn.addEventListener('click', getCurrentLocation);
 
-function getCurrentLocation() {
+function getCurrentLocation(warningMeassage = true) {
     
     if (!navigator.geolocation) {
-        showError("Geolocation is not supported by your browser. Fallback to default city");
+        if(warningMeassage)
+            showError("Geolocation is not supported by your browser. Fallback to default city");
         fetchWeather({ city: "Hyderabad", state: "Telangana", country: "IN" });
         return;
     }
@@ -531,7 +538,8 @@ function getCurrentLocation() {
     navigator.geolocation.getCurrentPosition(
         (positon) => fetchWeather({ lat: positon.coords.latitude, lon: positon.coords.longitude }).finally(hideLoading),
         (error) => {
-            showError(`Geolocation failed or denied: ${error.message} <br> Fallback to default city`);
+            if(warningMeassage)
+                showError(`Geolocation failed or denied: ${error.message} <br> Fallback to default city`);
             fetchWeather({ city: "Hyderabad", state: "Telangana", country: "IN" });
         }
     );
