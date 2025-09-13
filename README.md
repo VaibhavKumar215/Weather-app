@@ -2,7 +2,8 @@
 
 ## 📌 Introduction
 The **Weather Forecast Application** is a web-based project built with **JavaScript, HTML, and Tailwind CSS**.  
-Its primary purpose is to provide real-time weather updates and a 5-day extended forecast.  
+Its primary purpose is to deliver real-time weather updates, provide a 5-day extended forecast, and display recently searched cities.
+
 The app integrates with the **OpenWeatherMap API** to fetch accurate weather data, delivering a clean and interactive user experience.  
 
 ---
@@ -28,21 +29,17 @@ The app integrates with the **OpenWeatherMap API** to fetch accurate weather dat
 ---
 
 ## 🖼️ Screenshots
-### 🌍 Home Screen
-![Home Screen](assets/screenshots/home.png)
-
-### 📍 Current Location Weather
-![Current Location](assets/screenshots/current-location.png)
-
-
-### ⚠️ Weather Alerts
-![Weather Alerts](assets/screenshots/weather-alerts.png)
+### Home Screen
+![Home Screen](assets/screenshots/Home_screen.png)
 
 ### 📅 5-Day Forecast
-![5-Day Forecast](assets/screenshots/forecast.png)
+![5-Day Forecast](assets/screenshots/5-days-Forecast.png)
 
 ### 📜 Recently Searched Cities
-![Recently Searched Cities](assets/screenshots/recent-search.png)
+![Recently Searched Cities](assets/screenshots/Recent_Searched_cities.png)
+
+### ⚠️ Error Dialog Box
+![Weather Alerts](assets/screenshots/Error-DialogBox.png)
 
 ---
 ## Code Snipits
